@@ -1,4 +1,0 @@
-flake8==6.0.0
-build==0.10.0
-https://github.com/LeekByLemon/Leek/archive/47987ecd888b341eadbc0104675df534600a34c0.zip
--e .
