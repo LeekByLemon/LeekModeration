@@ -4,7 +4,7 @@ Moderation tools for the Leek bot.
 
 import asyncio
 import logging
-from typing import Union, Callable
+from typing import Callable, Union
 
 from discord import ApplicationContext, Cog, Forbidden, HTTPException, Member, Message, NotFound, User, slash_command
 from leek import LeekBot, get_default, localize
