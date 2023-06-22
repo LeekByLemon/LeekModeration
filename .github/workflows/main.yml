@@ -1,0 +1,34 @@
+name: Lint and Compile
+
+on:
+  release:
+    types:
+      - created
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - uses: actions/setup-python@v4.5.0
+        with:
+          python-version: 3.11
+      - run: pip install -r requirements.txt
+      - run: python -m flake8
+  build:
+    runs-on: ubuntu-22.04
+    needs:
+      - lint
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - uses: actions/setup-python@v4.5.0
+        with:
+          python-version: 3.11
+      - run: pip install -r requirements.txt
+      - run: python -m build
+      - uses: actions/upload-artifact@v3.1.2
+        with:
+          name: ${{ github.event.repository.name }}
+          path: dist/*
