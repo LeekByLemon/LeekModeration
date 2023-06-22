@@ -32,7 +32,6 @@ class Moderation(Cog):
     async def _safely_delete(self, ctx: ApplicationContext, message: Message) -> bool:
         try:
             await message.delete(reason=f"Clear by {ctx.user} ({ctx.user})")
-            return True
         except Forbidden:
             await ctx.send(localize("MODERATION_COMMAND_CLEAR_NO_PERMS", ctx.locale))
             return False
@@ -54,6 +53,8 @@ class Moderation(Cog):
                            delete_after=10)
             await asyncio.sleep(retry + 1)
             return await self._safely_delete(ctx, message)
+        else:
+            return True
 
     @slash_command(name=get_default("MODERATION_COMMAND_CLEAR_NAME"),
                    description=get_default("MODERATION_COMMAND_CLEAR_HELP"))
