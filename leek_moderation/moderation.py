@@ -1,8 +1,12 @@
+"""
+Moderation tools for the Leek bot.
+"""
+
 import asyncio
 import logging
-from typing import Union
+from typing import Union, Callable
 
-from discord import Cog, Message, Member, User, slash_command, Forbidden, NotFound, HTTPException, ApplicationContext
+from discord import ApplicationContext, Cog, Forbidden, HTTPException, Member, Message, NotFound, User, slash_command
 from leek import LeekBot, get_default, localize
 
 LOGGER = logging.getLogger("leek_moderation")
@@ -13,15 +17,19 @@ class Moderation(Cog):
     Set of tools for the Moderation of Discord servers.
     """
     def __init__(self, bot: LeekBot):
+        """
+        Creates a new moderation cog.
+        :param bot: The bot instance to use.
+        """
         self.bot: LeekBot = bot
 
-    def make_check(self, original: Message, check: Union[Member, User]):
+    def make_check(self, original: Message, check: Union[Member, User]) -> Callable[[Message], bool]:
         def func(msg: Message):
             return msg.author == check and original != msg
 
         return func
 
-    async def safely_delete(self, ctx: ApplicationContext, message: Message):
+    async def safely_delete(self, ctx: ApplicationContext, message: Message) -> bool:
         try:
             await message.delete(reason=f"Clear by {ctx.user} ({ctx.user})")
             return True
@@ -40,7 +48,7 @@ class Moderation(Cog):
 
             if response["global"]:
                 await ctx.send(localize("MODERATION_COMMAND_CLEAR_LIMIT_GLOBAL", ctx.locale, retry))
-                return
+                return False
 
             await ctx.send(localize("MODERATION_COMMAND_CLEAR_LIMIT_LOCAL", ctx.locale, retry),
                            delete_after=10)
@@ -49,7 +57,12 @@ class Moderation(Cog):
 
     @slash_command(name=get_default("MODERATION_COMMAND_CLEAR_NAME"),
                    description=get_default("MODERATION_COMMAND_CLEAR_HELP"))
-    async def clear(self, ctx: ApplicationContext, keep: Member):
+    async def clear(self, ctx: ApplicationContext, keep: Member) -> None:
+        """
+        Clears the messages of a channel.
+        :param ctx: The context of the application.
+        :param keep: The member whose messages should stay.
+        """
         await ctx.defer(ephemeral=True)
 
         matches = self.make_check(ctx.message, keep)
