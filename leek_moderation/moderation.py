@@ -6,8 +6,8 @@ import asyncio
 import logging
 from typing import Optional
 
-from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, slash_command, Permissions
-from leek import LeekBot, get_default, localize, get_localizations
+from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, Permissions, slash_command
+from leek import LeekBot, get_default, get_localizations, localize
 
 LOGGER = logging.getLogger("leek_moderation")
 PERMISSIONS = Permissions(manage_messages=True)
