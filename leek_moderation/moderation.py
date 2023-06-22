@@ -4,9 +4,9 @@ Moderation tools for the Leek bot.
 
 import asyncio
 import logging
-from typing import Callable, Union
+from typing import Optional
 
-from discord import ApplicationContext, Cog, Forbidden, HTTPException, Member, Message, NotFound, User, slash_command
+from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, slash_command
 from leek import LeekBot, get_default, localize
 
 LOGGER = logging.getLogger("leek_moderation")
@@ -22,12 +22,6 @@ class Moderation(Cog):
         :param bot: The bot instance to use.
         """
         self.bot: LeekBot = bot
-
-    def _make_check(self, original: Message, check: Union[Member, User]) -> Callable[[Message], bool]:
-        def func(msg: Message):  # noqa: ANN202
-            return msg.author == check and original != msg
-
-        return func
 
     async def _safely_delete(self, ctx: ApplicationContext, message: Message) -> bool:
         try:
@@ -58,18 +52,28 @@ class Moderation(Cog):
 
     @slash_command(name=get_default("MODERATION_COMMAND_CLEAR_NAME"),
                    description=get_default("MODERATION_COMMAND_CLEAR_HELP"))
-    async def clear(self, ctx: ApplicationContext, keep: Member) -> None:
+    async def clear(self, ctx: ApplicationContext, keep: Optional[str]) -> None:
         """
         Clears the messages of a channel.
         :param ctx: The context of the application.
-        :param keep: The member whose messages should stay.
+        :param keep: The id of the message that should stay.
         """
+        if keep is not None:
+            try:
+                keep_id = int(keep)
+            except ValueError:
+                await ctx.respond(localize("MODERATION_COMMAND_CLEAR_INVALID", ctx.locale, keep), ephemeral=True)
+                return
+        else:
+            keep_id = 0
+
         await ctx.defer(ephemeral=True)
 
-        matches = self._make_check(ctx.message, keep)
+        def should_keep(msg: Message):  # noqa: ANN202
+            return msg.id == keep_id
 
         async for message in ctx.channel.history(limit=100):
-            if matches(message):
+            if should_keep(message):
                 continue
             await self._safely_delete(ctx, message)
 
