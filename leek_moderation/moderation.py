@@ -23,13 +23,13 @@ class Moderation(Cog):
         """
         self.bot: LeekBot = bot
 
-    def make_check(self, original: Message, check: Union[Member, User]) -> Callable[[Message], bool]:
-        def func(msg: Message):
+    def _make_check(self, original: Message, check: Union[Member, User]) -> Callable[[Message], bool]:
+        def func(msg: Message):  # noqa: ANN202
             return msg.author == check and original != msg
 
         return func
 
-    async def safely_delete(self, ctx: ApplicationContext, message: Message) -> bool:
+    async def _safely_delete(self, ctx: ApplicationContext, message: Message) -> bool:
         try:
             await message.delete(reason=f"Clear by {ctx.user} ({ctx.user})")
             return True
@@ -53,7 +53,7 @@ class Moderation(Cog):
             await ctx.send(localize("MODERATION_COMMAND_CLEAR_LIMIT_LOCAL", ctx.locale, retry),
                            delete_after=10)
             await asyncio.sleep(retry + 1)
-            return await self.safely_delete(ctx, message)
+            return await self._safely_delete(ctx, message)
 
     @slash_command(name=get_default("MODERATION_COMMAND_CLEAR_NAME"),
                    description=get_default("MODERATION_COMMAND_CLEAR_HELP"))
@@ -65,11 +65,11 @@ class Moderation(Cog):
         """
         await ctx.defer(ephemeral=True)
 
-        matches = self.make_check(ctx.message, keep)
+        matches = self._make_check(ctx.message, keep)
 
         async for message in ctx.channel.history(limit=100):
             if matches(message):
                 continue
-            await self.safely_delete(ctx, message)
+            await self._safely_delete(ctx, message)
 
         await ctx.followup.send(localize("MODERATION_COMMAND_CLEAR_DONE", ctx.locale), ephemeral=True)
