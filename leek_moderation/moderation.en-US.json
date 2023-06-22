@@ -4,7 +4,7 @@
     "MODERATION_COMMAND_CLEAR_INVALID": "{0} is not a valid id!",
     "MODERATION_COMMAND_CLEAR_NO_PERMS": "The bot does not has permissions to delete messages!",
     "MODERATION_COMMAND_CLEAR_HTTP_ERROR": "Unable to delete messages: Code {0}",
-    "MODERATION_COMMAND_CLEAR_LIMIT_LOCAL": "Rate limited for {s} seconds, please wait...",
-    "MODERATION_COMMAND_CLEAR_LIMIT_GLOBAL": "Rate limited **globally** for {s} seconds.\nStopping.",
+    "MODERATION_COMMAND_CLEAR_LIMIT_LOCAL": "Rate limited for {0} seconds, please wait...",
+    "MODERATION_COMMAND_CLEAR_LIMIT_GLOBAL": "Rate limited **globally** for {0} seconds.\nStopping.",
     "MODERATION_COMMAND_CLEAR_DONE": "Done!"
 }
