@@ -6,10 +6,11 @@ import asyncio
 import logging
 from typing import Optional
 
-from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, slash_command
+from discord import ApplicationContext, Cog, Forbidden, HTTPException, Message, NotFound, slash_command, Permissions
 from leek import LeekBot, get_default, localize, get_localizations
 
 LOGGER = logging.getLogger("leek_moderation")
+PERMISSIONS = Permissions(manage_messages=True)
 
 
 class Moderation(Cog):
@@ -53,7 +54,8 @@ class Moderation(Cog):
     @slash_command(name=get_default("MODERATION_COMMAND_CLEAR_NAME"),
                    name_localizations=get_localizations("MODERATION_COMMAND_CLEAR_NAME"),
                    description=get_default("MODERATION_COMMAND_CLEAR_HELP"),
-                   description_localizations=get_localizations("MODERATION_COMMAND_CLEAR_HELP"))
+                   description_localizations=get_localizations("MODERATION_COMMAND_CLEAR_HELP"),
+                   default_member_permissions=PERMISSIONS)
     async def clear(self, ctx: ApplicationContext, keep: Optional[str]) -> None:
         """
         Clears the messages of a channel.
