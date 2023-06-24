@@ -30,7 +30,7 @@ classifiers = [
     "Topic :: Communications :: Chat"
 ]
 dependencies = [
-    "leekbot @ https://github.com/LeekByLemon/Leek/archive/fb161856bb1bb831dae3df74e7628341b829ee5f.zip",
+    "leekbot>=0.0.1,<1.0.0",
 ]
 requires-python = ">=3.8"
 dynamic = [
