@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-python@v4.5.0
         with:
           python-version: 3.11
+      - run: pip install https://github.com/LeekByLemon/Leek/archive/master.zip
       - run: pip install .[dev]
       - run: python -m ruff --format=github .
   build:
