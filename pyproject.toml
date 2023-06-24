@@ -44,6 +44,7 @@ Homepage = "https://github.com/LeekByLemon/LeekModeration"
 dev = [
     "ruff>=0.0.274,<1.0.0",
     "build>=0.0.274,<1.0.0",
+    "leekbot @ https://github.com/LeekByLemon/Leek/archive/master.zip"
 ]
 
 [tool.setuptools]
